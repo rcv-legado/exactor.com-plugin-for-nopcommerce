@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<TaxRequest xmlns='http://www.exactor.com/ns'>
+  <MerchantId xmlns="http://www.exactor.com/ns">{0}</MerchantId>
+  <UserId xmlns="http://www.exactor.com/ns">{1}</UserId>
+  <InvoiceRequest xmlns="http://www.exactor.com/ns">
+  <SaleDate>{11}</SaleDate>
+    <ShipTo>
+      <FullName>{2}</FullName>
+      <Street1>{3}</Street1>
+      <Street2>{4}</Street2>
+      <City>{5}</City>
+      <StateOrProvince>{6}</StateOrProvince>
+      <PostalCode>{7}</PostalCode>
+      <Country>{8}</Country>
+    </ShipTo>
+    <LineItem id="_0">
+      <Description>{9}</Description>
+      <GrossAmount>{10}</GrossAmount>
+    </LineItem>
+  </InvoiceRequest>
+</TaxRequest>
