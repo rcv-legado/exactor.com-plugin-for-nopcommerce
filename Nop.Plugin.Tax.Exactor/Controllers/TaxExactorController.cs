@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Plugin.Tax.Exactor.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 
@@ -13,6 +15,8 @@ namespace Nop.Plugin.Tax.Exactor.Controllers
 {
     public class TaxExactorController : BasePluginController
     {
+        private readonly IWorkContext _workContext;
+        private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
         private readonly ExactorTaxSettings _exactorTaxSettings;
         private readonly ISettingService _settingService;
@@ -20,13 +24,17 @@ namespace Nop.Plugin.Tax.Exactor.Controllers
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ILocalizationService _localizationService;
 
-        public TaxExactorController(ITaxService taxService,
+        public TaxExactorController(IWorkContext workContext,
+            IStoreService storeService
+            , ITaxService taxService,
             ExactorTaxSettings exactorTaxSettings,
             ISettingService settingService,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
             ILocalizationService localizationService)
         {
+            this._workContext = workContext;
+            this._storeService = storeService;
             this._taxService = taxService;
             this._exactorTaxSettings = exactorTaxSettings;
             this._settingService = settingService;
@@ -39,11 +47,15 @@ namespace Nop.Plugin.Tax.Exactor.Controllers
         [ChildActionOnly]
         public ActionResult Configure()
         {
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+
             var model = new ConfigurationModel
             {
                 MerchantId = _exactorTaxSettings.MerchantId,
                 UserId = _exactorTaxSettings.UserId,
-                TestAddress = new AddressModel()
+                TestAddress = new AddressModel(),
+                ActiveStoreScopeConfiguration = storeScope
             };
 
             model.TestAddress.AvailableCountries = _countryService.GetAllCountries(showHidden: true)

@@ -1,5 +1,6 @@
 ﻿@model Nop.Plugin.Tax.Exactor.Models.ConfigurationModel
 @using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -10,6 +11,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MerchantIdOverrideForStore, model => model.MerchantId, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MerchantId):
             </td>
             <td class="adminData">
@@ -19,6 +21,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.UserIdOverrideForStore, model => model.UserId, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.UserId):
             </td>
             <td class="adminData">
