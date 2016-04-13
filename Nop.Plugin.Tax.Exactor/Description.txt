@@ -1,4 +1,4 @@
-﻿Group: Payment methods
+﻿Group: Tax providers
 FriendlyName: Exactor
 SystemName: Tax.Exactor
 Version: 1.00
