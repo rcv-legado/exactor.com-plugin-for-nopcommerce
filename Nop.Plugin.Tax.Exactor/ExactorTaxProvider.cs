@@ -19,13 +19,18 @@ namespace Nop.Plugin.Tax.Exactor
 		private readonly ISettingService _settingService;
         private readonly ExactorTaxSettings _exactorTaxSettings;
         private readonly ICacheManager _cacheManager;
-	    private const string REQUEST_URL = "https://taxrequest.exactor.com/request/xml";
+	    private readonly ITaxCategoryService _taxCategoryService;
+        private const string REQUEST_URL = "https://taxrequest.exactor.com/request/xml";
 
-        public ExactorTaxProvider(ISettingService settingService, ExactorTaxSettings exactorTaxSettings, ICacheManager cacheManager)
+        public ExactorTaxProvider(ISettingService settingService,
+            ExactorTaxSettings exactorTaxSettings,
+            ICacheManager cacheManager,
+            ITaxCategoryService taxCategoryService)
         {
             this._settingService = settingService;
             this._exactorTaxSettings = exactorTaxSettings;
             this._cacheManager = cacheManager;
+            this._taxCategoryService = taxCategoryService;
         }
 
 	    /// <summary>
@@ -36,7 +41,7 @@ namespace Nop.Plugin.Tax.Exactor
 	    public CalculateTaxResult GetTaxRate(CalculateTaxRequest calculateTaxRequest)
 	    {
 	        var address = calculateTaxRequest.Address;
-	        if (address == null)
+	        if (address == null || address.Country==null)
 	            return new CalculateTaxResult {Errors = new List<string> {"Address is not set"}};
 	        var cacheKey = string.Format("Tax.Exactor.AddressId.{0}", address.Id);
 	        if (_cacheManager.IsSet(cacheKey))
@@ -45,8 +50,10 @@ namespace Nop.Plugin.Tax.Exactor
 	        var errors = new List<string>();
 	        var tax = decimal.Zero;
 
+	        var taxCategory = _taxCategoryService.GetTaxCategoryById(calculateTaxRequest.TaxCategoryId);
 
-	        var fullName = string.Format("{0} {1}", address.FirstName, address.LastName);
+	        var taxCategoryName = taxCategory == null ? "Anything" : taxCategory.Name;
+            var fullName = string.Format("{0} {1}", address.FirstName, address.LastName);
 
             //create rax request
 	        var xml = String.Format(Properties.Resources.taxRequest,
@@ -59,7 +66,7 @@ namespace Nop.Plugin.Tax.Exactor
 	            address.StateProvince != null ? address.StateProvince.Name : String.Empty,
 	            address.ZipPostalCode,
 	            address.Country.Name,
-	            "Anything", //description
+                taxCategoryName, //description
 	            100, //gross amount
 	            DateTime.Now.ToString("yyyy-MM-dd") /*sale date*/);
 
