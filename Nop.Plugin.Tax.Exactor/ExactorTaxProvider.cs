@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Web.Routing;
 using System.Xml.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
@@ -53,6 +54,8 @@ namespace Nop.Plugin.Tax.Exactor
 	        var taxCategory = _taxCategoryService.GetTaxCategoryById(calculateTaxRequest.TaxCategoryId);
 
 	        var taxCategoryName = taxCategory == null ? "Anything" : taxCategory.Name;
+            taxCategoryName = XmlHelper.XmlEncode(taxCategoryName);
+
             var fullName = string.Format("{0} {1}", address.FirstName, address.LastName);
 
             //create rax request
@@ -71,7 +74,7 @@ namespace Nop.Plugin.Tax.Exactor
 	            DateTime.Now.ToString("yyyy-MM-dd") /*sale date*/);
 
 	        string data;
-	        using (var client = new WebClient())
+            using (var client = new WebClient())
 	        {
 	            data = client.UploadString(REQUEST_URL, xml);
 	        }
