@@ -22,7 +22,7 @@ namespace Nop.Plugin.Tax.Exactor
         private readonly ICacheManager _cacheManager;
 	    private readonly ITaxCategoryService _taxCategoryService;
         private const string REQUEST_URL = "https://taxrequest.exactor.com/request/xml";
-        private const string TAXRATE_KEY = "Tax.Exactor.AddressId.{0}.TaxCategoryId.{1}";
+        private const string TAXRATE_KEY = "Nop.tax.exactor.taxbyaddresscategory-{0}-{1}";
 
         public ExactorTaxProvider(ISettingService settingService,
             ExactorTaxSettings exactorTaxSettings,
@@ -45,68 +45,69 @@ namespace Nop.Plugin.Tax.Exactor
 	        var address = calculateTaxRequest.Address;
 	        if (address == null || address.Country==null)
 	            return new CalculateTaxResult {Errors = new List<string> {"Address is not set"}};
-	        var cacheKey = string.Format(TAXRATE_KEY, address.Id, calculateTaxRequest.TaxCategoryId);
-	        if (_cacheManager.IsSet(cacheKey))
-	            return new CalculateTaxResult {TaxRate = _cacheManager.Get<decimal>(cacheKey)};
 
-	        var errors = new List<string>();
-	        var tax = decimal.Zero;
+            var errors = new List<string>();
 
-	        var taxCategory = _taxCategoryService.GetTaxCategoryById(calculateTaxRequest.TaxCategoryId);
+            var taxRate = _cacheManager.Get<decimal>(string.Format(TAXRATE_KEY, address.Id, calculateTaxRequest.TaxCategoryId), () =>
+	            {
+                    var tax = decimal.Zero;
 
-	        var taxCategoryName = taxCategory == null ? "Anything" : taxCategory.Name;
-            taxCategoryName = XmlHelper.XmlEncode(taxCategoryName);
+                    var taxCategory = _taxCategoryService.GetTaxCategoryById(calculateTaxRequest.TaxCategoryId);
 
-            var fullName = string.Format("{0} {1}", address.FirstName, address.LastName);
+                    var taxCategoryName = taxCategory == null ? "Anything" : taxCategory.Name;
+                    taxCategoryName = XmlHelper.XmlEncode(taxCategoryName);
 
-            //create tax request
-	        var xml = String.Format(Properties.Resources.taxRequest,
-	            _exactorTaxSettings.MerchantId,
-	            _exactorTaxSettings.UserId,
-	            fullName,
-	            address.Address1,
-	            address.Address2 ?? String.Empty,
-	            address.City,
-	            address.StateProvince != null ? address.StateProvince.Name : String.Empty,
-	            address.ZipPostalCode,
-	            address.Country.Name,
-                taxCategoryName, //description
-	            100, //gross amount
-                DateTime.Now.ToString("yyyy-MM-dd") //sale date
-                );
+                    var fullName = string.Format("{0} {1}", address.FirstName, address.LastName);
 
+                    //create tax request
+                    var xml = String.Format(Properties.Resources.taxRequest,
+                        _exactorTaxSettings.MerchantId,
+                        _exactorTaxSettings.UserId,
+                        fullName,
+                        address.Address1,
+                        address.Address2 ?? String.Empty,
+                        address.City,
+                        address.StateProvince != null ? address.StateProvince.Name : String.Empty,
+                        address.ZipPostalCode,
+                        address.Country.Name,
+                        taxCategoryName, //description
+                        100, //gross amount
+                        DateTime.Now.ToString("yyyy-MM-dd") //sale date
+                        );
 
-            string data;
-            using (var client = new WebClient())
-	        {
-	            data = client.UploadString(REQUEST_URL, xml);
-	        }
+                    string data;
+                    using (var client = new WebClient())
+                    {
+                        data = client.UploadString(REQUEST_URL, xml);
+                    }
 
-	        var taxResponse = XDocument.Parse(data).Root;
+                    var taxResponse = XDocument.Parse(data).Root;
 
-	        if (taxResponse == null)
-	            return new CalculateTaxResult {Errors = errors, TaxRate = tax};
+	                if (taxResponse == null)
+	                    return 0;
 
-            //get XML namespace
-            var ns = taxResponse.Name.ToString().Replace("TaxResponse", "");
+                    //get XML namespace
+                    var ns = taxResponse.Name.ToString().Replace("TaxResponse", "");
 
-	        var invoiceResponse = taxResponse.Element(ns + "InvoiceResponse");
-	        var errorResponse = taxResponse.Element(ns + "ErrorResponse");
+                    var invoiceResponse = taxResponse.Element(ns + "InvoiceResponse");
+                    var errorResponse = taxResponse.Element(ns + "ErrorResponse");
 
-            if (invoiceResponse == null && errorResponse == null)
-                return new CalculateTaxResult { Errors = errors, TaxRate = tax };
+	                if (invoiceResponse == null && errorResponse == null)
+	                    return 0;
 
-	        if (errorResponse != null)
-	        {
-	            errors.Add(String.Format("Line {0}: {1}", errorResponse.Element(ns + "LineNumber").Value, errorResponse.Element(ns + "ErrorDescription").Value));
-	        }
-	        else
-	        {
-	            tax = Convert.ToDecimal(invoiceResponse.Element(ns + "TotalTaxAmount").Value);
-	        }
+                    if (errorResponse != null)
+                    {
+                        errors.Add(String.Format("Line {0}: {1}", errorResponse.Element(ns + "LineNumber").Value, errorResponse.Element(ns + "ErrorDescription").Value));
+                    }
+                    else
+                    {
+                        tax = Convert.ToDecimal(invoiceResponse.Element(ns + "TotalTaxAmount").Value);
+                    }
 
-	        _cacheManager.Set(cacheKey, tax, 60);
-            return new CalculateTaxResult {Errors = errors, TaxRate = tax};
+	                return tax;
+	            });
+
+            return new CalculateTaxResult {Errors = errors, TaxRate = taxRate};
 	    }
 
 	    /// <summary>
