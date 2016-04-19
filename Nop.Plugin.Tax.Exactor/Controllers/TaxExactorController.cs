@@ -54,7 +54,6 @@ namespace Nop.Plugin.Tax.Exactor.Controllers
             {
                 MerchantId = _exactorTaxSettings.MerchantId,
                 UserId = _exactorTaxSettings.UserId,
-                TestAddress = new AddressModel(),
                 ActiveStoreScopeConfiguration = storeScope
             };
 
