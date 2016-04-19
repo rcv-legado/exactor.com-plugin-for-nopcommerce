@@ -149,7 +149,7 @@ namespace Nop.Plugin.Tax.Exactor
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.City.Hint", "Enter the city name.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.Address", "Address");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.Address.Hint", "Enter the address.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.Testing", "Test tax calculation");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.Test", "Test tax calculation");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.ZipPostalCode", "Zip postal code");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.ZipPostalCode.Hint", "Enter the zip postal code.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.TestSuccess", "Test success! Tax: {0}");
@@ -178,7 +178,7 @@ namespace Nop.Plugin.Tax.Exactor
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.City.Hint");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Address");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Address.Hint");
-            this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Testing");
+            this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Test");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.ZipPostalCode");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.ZipPostalCode.Hint");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.TestSuccess");
