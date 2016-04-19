@@ -6,10 +6,6 @@
     @Html.AntiForgeryToken()
     <table class="adminContent">
         <tr>
-            <td colspan="2"></td>
-                
-        </tr>
-        <tr>
             <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.MerchantIdOverrideForStore, model => model.MerchantId, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MerchantId):

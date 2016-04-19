@@ -12,16 +12,17 @@ using Nop.Services.Tax;
 
 namespace Nop.Plugin.Tax.Exactor
 {
-	/// <summary>
-	/// Description of ExactorTaxProvider.
-	/// </summary>
-	public class ExactorTaxProvider:BasePlugin, ITaxProvider
+    /// <summary>
+    /// Exaxtor tax provider
+    /// </summary>
+    public class ExactorTaxProvider:BasePlugin, ITaxProvider
 	{
 		private readonly ISettingService _settingService;
         private readonly ExactorTaxSettings _exactorTaxSettings;
         private readonly ICacheManager _cacheManager;
 	    private readonly ITaxCategoryService _taxCategoryService;
         private const string REQUEST_URL = "https://taxrequest.exactor.com/request/xml";
+        private const string TAXRATE_KEY = "Tax.Exactor.AddressId.{0}.TaxCategoryId.{1}";
 
         public ExactorTaxProvider(ISettingService settingService,
             ExactorTaxSettings exactorTaxSettings,
@@ -44,7 +45,7 @@ namespace Nop.Plugin.Tax.Exactor
 	        var address = calculateTaxRequest.Address;
 	        if (address == null || address.Country==null)
 	            return new CalculateTaxResult {Errors = new List<string> {"Address is not set"}};
-	        var cacheKey = string.Format("Tax.Exactor.AddressId.{0}", address.Id);
+	        var cacheKey = string.Format(TAXRATE_KEY, address.Id, calculateTaxRequest.TaxCategoryId);
 	        if (_cacheManager.IsSet(cacheKey))
 	            return new CalculateTaxResult {TaxRate = _cacheManager.Get<decimal>(cacheKey)};
 
@@ -58,7 +59,7 @@ namespace Nop.Plugin.Tax.Exactor
 
             var fullName = string.Format("{0} {1}", address.FirstName, address.LastName);
 
-            //create rax request
+            //create tax request
 	        var xml = String.Format(Properties.Resources.taxRequest,
 	            _exactorTaxSettings.MerchantId,
 	            _exactorTaxSettings.UserId,
@@ -71,9 +72,11 @@ namespace Nop.Plugin.Tax.Exactor
 	            address.Country.Name,
                 taxCategoryName, //description
 	            100, //gross amount
-	            DateTime.Now.ToString("yyyy-MM-dd") /*sale date*/);
+                DateTime.Now.ToString("yyyy-MM-dd") //sale date
+                );
 
-	        string data;
+
+            string data;
             using (var client = new WebClient())
 	        {
 	            data = client.UploadString(REQUEST_URL, xml);
@@ -136,7 +139,7 @@ namespace Nop.Plugin.Tax.Exactor
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.MerchantId", "Merchant ID");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.MerchantId.Hint", "Enter the Merchant ID that you received during registration at the website exactor.com.");            
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.UserId", "User ID");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.UserId.Hint", "Enter you User ID from the website exactor.com.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.UserId.Hint", "Enter your User ID from the website exactor.com.");
 			this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.Country", "Country");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.Country.Hint", "Select country.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.Exactor.Region", "State/Province");
@@ -166,16 +169,16 @@ namespace Nop.Plugin.Tax.Exactor
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.MerchantId.Hint");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.UserId");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.UserId.Hint");
-			this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Country");
+            this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Country");
+            this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Country.Hint");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Region");
+            this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Region.Hint");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.City");
+            this.DeletePluginLocaleResource("Plugins.Tax.Exactor.City.Hint");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Address");
+            this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Address.Hint");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Testing");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.ZipPostalCode");
-            this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Country.Hint");
-            this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Region.Hint");
-            this.DeletePluginLocaleResource("Plugins.Tax.Exactor.City.Hint");
-            this.DeletePluginLocaleResource("Plugins.Tax.Exactor.Address.Hint");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.ZipPostalCode.Hint");
             this.DeletePluginLocaleResource("Plugins.Tax.Exactor.TestSuccess");
 

@@ -98,7 +98,7 @@ namespace Nop.Plugin.Tax.Exactor.Controllers
 
             if (taxProvider == null)
             {
-                ErrorNotification("Not load tax provider");
+                ErrorNotification("Can't load tax provider");
                 return Configure();
             }
 
