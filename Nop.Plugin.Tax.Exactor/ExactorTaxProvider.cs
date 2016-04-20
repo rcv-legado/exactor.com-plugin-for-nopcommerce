@@ -78,7 +78,17 @@ namespace Nop.Plugin.Tax.Exactor
                     string data;
                     using (var client = new WebClient())
                     {
-                        data = client.UploadString(REQUEST_URL, xml);
+                        try
+                        {
+                            data = client.UploadString(REQUEST_URL, xml);
+                        }
+                        catch (WebException ex)
+                        {
+                            
+                           errors.Add(ex.Message);
+                            return 0;
+                        }
+                        
                     }
 
                     var taxResponse = XDocument.Parse(data).Root;
