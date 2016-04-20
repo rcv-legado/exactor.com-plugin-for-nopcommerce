@@ -51,7 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\TaxExactorController.cs" />
-    <Compile Include="DependencyRegistrar.cs" />
+    <Compile Include="Infrastructure\Cache\CacheEventConsumer.cs" />
+    <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="ExactorTaxProvider.cs" />
     <Compile Include="ExactorTaxSettings.cs" />
     <Compile Include="Models\AddressModel.cs" />

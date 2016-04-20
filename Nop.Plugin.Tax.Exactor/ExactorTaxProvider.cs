@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Plugins;
+using Nop.Plugin.Tax.Exactor.Infrastructure.Cache;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Tax;
@@ -16,13 +17,12 @@ namespace Nop.Plugin.Tax.Exactor
     /// Exaxtor tax provider
     /// </summary>
     public class ExactorTaxProvider:BasePlugin, ITaxProvider
-	{
+    {
 		private readonly ISettingService _settingService;
         private readonly ExactorTaxSettings _exactorTaxSettings;
         private readonly ICacheManager _cacheManager;
 	    private readonly ITaxCategoryService _taxCategoryService;
         private const string REQUEST_URL = "https://taxrequest.exactor.com/request/xml";
-        private const string TAXRATE_KEY = "Nop.tax.exactor.taxbyaddresscategory-{0}-{1}";
 
         public ExactorTaxProvider(ISettingService settingService,
             ExactorTaxSettings exactorTaxSettings,
@@ -48,7 +48,7 @@ namespace Nop.Plugin.Tax.Exactor
 
             var errors = new List<string>();
 
-            var taxRate = _cacheManager.Get<decimal>(string.Format(TAXRATE_KEY, address.Id, calculateTaxRequest.TaxCategoryId), () =>
+            var taxRate = _cacheManager.Get<decimal>(string.Format(ModelCacheEventConsumer.TAXRATE_KEY, address.Id, calculateTaxRequest.TaxCategoryId), () =>
 	            {
                     var tax = decimal.Zero;
 
@@ -195,5 +195,5 @@ namespace Nop.Plugin.Tax.Exactor
 
             base.Uninstall();
         }
-	}
+    }
 }

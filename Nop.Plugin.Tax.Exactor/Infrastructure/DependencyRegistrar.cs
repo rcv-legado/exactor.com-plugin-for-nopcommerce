@@ -5,7 +5,7 @@ using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 
-namespace Nop.Plugin.Tax.Exactor
+namespace Nop.Plugin.Tax.Exactor.Infrastructure
 {
     /// <summary>
     /// Dependency registrar
