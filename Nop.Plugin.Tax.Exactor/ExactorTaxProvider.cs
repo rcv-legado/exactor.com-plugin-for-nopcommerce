@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Web.Routing;
 using System.Xml.Linq;
@@ -111,7 +112,7 @@ namespace Nop.Plugin.Tax.Exactor
                     }
                     else
                     {
-                        tax = Convert.ToDecimal(invoiceResponse.Element(ns + "TotalTaxAmount").Value);
+                        tax = Convert.ToDecimal(invoiceResponse.Element(ns + "TotalTaxAmount").Value, new CultureInfo("en-US"));
                     }
 
 	                return tax;
