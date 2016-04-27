@@ -44,7 +44,7 @@ namespace Nop.Plugin.Tax.Exactor
 	    public CalculateTaxResult GetTaxRate(CalculateTaxRequest calculateTaxRequest)
 	    {
 	        var address = calculateTaxRequest.Address;
-	        if (address == null || address.Country==null)
+	        if (address == null || address.Country == null)
 	            return new CalculateTaxResult {Errors = new List<string> {"Address is not set"}};
 
             var errors = new List<string>();

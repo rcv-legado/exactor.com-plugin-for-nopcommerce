@@ -13,7 +13,7 @@ namespace Nop.Plugin.Tax.Exactor.Infrastructure.Cache
     public partial class ModelCacheEventConsumer : IConsumer<EntityUpdated<Address>>
     {
         private readonly ICacheManager _cacheManager;
-        public const string TAXRATE_KEY = "Nop.tax.exactor.taxbyaddresscategory-{0}-{1}";
+        public const string TAXRATE_KEY = "Nop.plugins.tax.exactor.taxbyaddresscategory-{0}-{1}";
 
         public ModelCacheEventConsumer()
         {

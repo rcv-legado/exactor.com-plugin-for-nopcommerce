@@ -5,7 +5,6 @@ namespace Nop.Plugin.Tax.Exactor.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
-
         public ConfigurationModel()
         {
             TestAddress = new AddressModel();
