@@ -25,8 +25,8 @@ namespace Nop.Plugin.Tax.Exactor.Controllers
         private readonly ILocalizationService _localizationService;
 
         public TaxExactorController(IWorkContext workContext,
-            IStoreService storeService
-            , ITaxService taxService,
+            IStoreService storeService,
+            ITaxService taxService,
             ExactorTaxSettings exactorTaxSettings,
             ISettingService settingService,
             ICountryService countryService,
@@ -112,7 +112,7 @@ namespace Nop.Plugin.Tax.Exactor.Controllers
                 LastName = "Test"
             };
 
-            var taxResult = taxProvider.GetTaxRate(new CalculateTaxRequest {Address = address});
+            var taxResult = taxProvider.GetTaxRate(new CalculateTaxRequest { Address = address });
 
             if (taxResult.Success)
             {

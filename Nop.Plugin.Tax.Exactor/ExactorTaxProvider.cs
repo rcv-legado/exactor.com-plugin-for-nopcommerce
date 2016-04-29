@@ -17,7 +17,7 @@ namespace Nop.Plugin.Tax.Exactor
     /// <summary>
     /// Exaxtor tax provider
     /// </summary>
-    public class ExactorTaxProvider:BasePlugin, ITaxProvider
+    public class ExactorTaxProvider : BasePlugin, ITaxProvider
     {
 		private readonly ISettingService _settingService;
         private readonly ExactorTaxSettings _exactorTaxSettings;
@@ -45,7 +45,7 @@ namespace Nop.Plugin.Tax.Exactor
 	    {
 	        var address = calculateTaxRequest.Address;
 	        if (address == null || address.Country == null)
-	            return new CalculateTaxResult {Errors = new List<string> {"Address is not set"}};
+	            return new CalculateTaxResult { Errors = new List<string> { "Address is not set" } };
 
             var errors = new List<string>();
 
@@ -85,7 +85,6 @@ namespace Nop.Plugin.Tax.Exactor
                         }
                         catch (WebException ex)
                         {
-                            
                            errors.Add(ex.Message);
                             return 0;
                         }
@@ -98,7 +97,7 @@ namespace Nop.Plugin.Tax.Exactor
 	                    return 0;
 
                     //get XML namespace
-                    var ns = taxResponse.Name.ToString().Replace("TaxResponse", "");
+                    var ns = taxResponse.Name.ToString().Replace("TaxResponse", String.Empty);
 
                     var invoiceResponse = taxResponse.Element(ns + "InvoiceResponse");
                     var errorResponse = taxResponse.Element(ns + "ErrorResponse");
@@ -118,7 +117,7 @@ namespace Nop.Plugin.Tax.Exactor
 	                return tax;
 	            });
 
-            return new CalculateTaxResult {Errors = errors, TaxRate = taxRate};
+            return new CalculateTaxResult { Errors = errors, TaxRate = taxRate };
 	    }
 
 	    /// <summary>

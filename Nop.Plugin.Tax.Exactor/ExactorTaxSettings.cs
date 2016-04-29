@@ -2,7 +2,7 @@
 
 namespace Nop.Plugin.Tax.Exactor
 {
-	public class ExactorTaxSettings: ISettings
+	public class ExactorTaxSettings : ISettings
     {
         public string MerchantId { get; set; }
 
