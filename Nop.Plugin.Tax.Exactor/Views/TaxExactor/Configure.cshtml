@@ -4,105 +4,134 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MerchantIdOverrideForStore, model => model.MerchantId, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MerchantId):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MerchantId)
-                @Html.ValidationMessageFor(model => model.MerchantId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.UserIdOverrideForStore, model => model.UserId, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.UserId):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.UserId)
-                @Html.ValidationMessageFor(model => model.UserId)
-            </td>
-        </tr> 
-        <tr>
-            <td colspan="2">
-                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            </td>
-        </tr>
-    </table>
-    <br />
-    <table>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TestAddress.CountryId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.TestAddress.CountryId, Model.TestAddress.AvailableCountries)
-                @Html.ValidationMessageFor(model => model.TestAddress.CountryId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TestAddress.RegionId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.TestAddress.RegionId, Model.TestAddress.AvailableStates)
-                @Html.ValidationMessageFor(model => model.TestAddress.RegionId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TestAddress.City):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.TestAddress.City)
-                @Html.ValidationMessageFor(model => model.TestAddress.City)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TestAddress.ZipPostalCode):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.TestAddress.ZipPostalCode)
-                @Html.ValidationMessageFor(model => model.TestAddress.ZipPostalCode)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TestAddress.Address):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.TestAddress.Address)
-                @Html.ValidationMessageFor(model => model.TestAddress.Address)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" name="test" class="k-button" value="@T("Plugins.Tax.Exactor.Test")" />
-            </td>
-        </tr>
-    </table>
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.MerchantIdOverrideForStore, model => model.MerchantId, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.MerchantId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.MerchantId)
+                        @Html.ValidationMessageFor(model => model.MerchantId)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.UserIdOverrideForStore, model => model.UserId, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.UserId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.UserId)
+                        @Html.ValidationMessageFor(model => model.UserId)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.TestAddress.CountryId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.TestAddress.CountryId, Model.TestAddress.AvailableCountries)
+                        @Html.ValidationMessageFor(model => model.TestAddress.CountryId)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.TestAddress.RegionId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.TestAddress.RegionId, Model.TestAddress.AvailableStates)
+                        @Html.ValidationMessageFor(model => model.TestAddress.RegionId)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.TestAddress.City)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.TestAddress.City)
+                        @Html.ValidationMessageFor(model => model.TestAddress.City)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.TestAddress.ZipPostalCode)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.TestAddress.ZipPostalCode)
+                        @Html.ValidationMessageFor(model => model.TestAddress.ZipPostalCode)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.TestAddress.Address)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.TestAddress.Address)
+                        @Html.ValidationMessageFor(model => model.TestAddress.Address)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="test" class="btn bg-blue" value="@T("Plugins.Tax.Exactor.Test")"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 
     <script type="text/javascript">
         function load_states(countryId) {
             var regions = $("#@Html.FieldIdFor(model => model.TestAddress.RegionId)");
 
-            $.get("@(Url.Action("GetStatesByCountryId"))", { "countryId": countryId }, function (data) {
-            regions.html('');
-            $.each(data, function(id, option) {
-                regions.append($('<option></option>').val(option.id).html(option.name));
-            });
-        }).fail(function() { alert('Failed to retrieve states.'); });
+            $.get("@(Url.Action("GetStatesByCountryId"))",
+                    { "countryId": countryId },
+                    function(data) {
+                        regions.html('');
+                        $.each(data,
+                            function(id, option) {
+                                regions.append($('<option></option>').val(option.id).html(option.name));
+                            });
+                    })
+                .fail(function() { alert('Failed to retrieve states.'); });
         }
 
-        $(document).ready(function() {
-            $("#@Html.FieldIdFor(model => model.TestAddress.CountryId)").change(function(){
-                var selectedItem = $(this).val();
-                load_states(selectedItem);
+        $(document)
+            .ready(function() {
+                $("#@Html.FieldIdFor(model => model.TestAddress.CountryId)")
+                    .change(function() {
+                        var selectedItem = $(this).val();
+                        load_states(selectedItem);
+                    });
+                load_states($("#@Html.FieldIdFor(model => model.TestAddress.CountryId)").val());
             });
-            load_states($("#@Html.FieldIdFor(model => model.TestAddress.CountryId)").val());
-        });
     </script>
 }
