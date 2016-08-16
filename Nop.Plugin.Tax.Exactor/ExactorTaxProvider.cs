@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Web.Routing;
 using System.Xml.Linq;
@@ -49,7 +50,9 @@ namespace Nop.Plugin.Tax.Exactor
 
             var errors = new List<string>();
 
-            var taxRate = _cacheManager.Get<decimal>(string.Format(ModelCacheEventConsumer.TAXRATE_KEY, address.Id, calculateTaxRequest.TaxCategoryId), () =>
+            var taxRateKey = string.Format(ModelCacheEventConsumer.TAXRATE_KEY, address.Id, calculateTaxRequest.TaxCategoryId);
+
+            var taxRate = _cacheManager.Get(taxRateKey, () =>
 	            {
                     var tax = decimal.Zero;
 
@@ -72,7 +75,9 @@ namespace Nop.Plugin.Tax.Exactor
                         address.ZipPostalCode,
                         address.Country.Name,
                         taxCategoryName, //description
-                        100, //gross amount
+                        //Exactor does not return rate, only the amount of tax. The amount has limited accuracy in two digits,
+                        //so the price sent is obviously greater. Further it is converted into percentages with accuracy up to the fourth digit.
+                        10000, //gross amount
                         DateTime.Now.ToString("yyyy-MM-dd") //sale date
                         );
 
@@ -114,8 +119,11 @@ namespace Nop.Plugin.Tax.Exactor
                         tax = Convert.ToDecimal(invoiceResponse.Element(ns + "TotalTaxAmount").Value, new CultureInfo("en-US"));
                     }
 
-	                return tax;
+	                return tax / 100;
 	            });
+
+            if (errors.Any())
+                _cacheManager.Remove(taxRateKey);
 
             return new CalculateTaxResult { Errors = errors, TaxRate = taxRate };
 	    }

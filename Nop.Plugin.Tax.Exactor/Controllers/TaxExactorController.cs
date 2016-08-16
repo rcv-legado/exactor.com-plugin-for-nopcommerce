@@ -18,7 +18,6 @@ namespace Nop.Plugin.Tax.Exactor.Controllers
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
-        private readonly ExactorTaxSettings _exactorTaxSettings;
         private readonly ISettingService _settingService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -27,7 +26,6 @@ namespace Nop.Plugin.Tax.Exactor.Controllers
         public TaxExactorController(IWorkContext workContext,
             IStoreService storeService,
             ITaxService taxService,
-            ExactorTaxSettings exactorTaxSettings,
             ISettingService settingService,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
@@ -36,7 +34,6 @@ namespace Nop.Plugin.Tax.Exactor.Controllers
             this._workContext = workContext;
             this._storeService = storeService;
             this._taxService = taxService;
-            this._exactorTaxSettings = exactorTaxSettings;
             this._settingService = settingService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
@@ -49,11 +46,12 @@ namespace Nop.Plugin.Tax.Exactor.Controllers
         {
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var exactorTaxSettings = _settingService.LoadSetting<ExactorTaxSettings>(storeScope);
 
             var model = new ConfigurationModel
             {
-                MerchantId = _exactorTaxSettings.MerchantId,
-                UserId = _exactorTaxSettings.UserId,
+                MerchantId = exactorTaxSettings.MerchantId,
+                UserId = exactorTaxSettings.UserId,
                 ActiveStoreScopeConfiguration = storeScope
             };
 
@@ -75,9 +73,13 @@ namespace Nop.Plugin.Tax.Exactor.Controllers
             if (!ModelState.IsValid)
                 return Configure();
 
-            _exactorTaxSettings.MerchantId = model.MerchantId;
-            _exactorTaxSettings.UserId = model.UserId;
-            _settingService.SaveSetting(_exactorTaxSettings);
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var exactorTaxSettings = _settingService.LoadSetting<ExactorTaxSettings>(storeScope);
+
+            exactorTaxSettings.MerchantId = model.MerchantId;
+            exactorTaxSettings.UserId = model.UserId;
+            _settingService.SaveSetting(exactorTaxSettings);
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
