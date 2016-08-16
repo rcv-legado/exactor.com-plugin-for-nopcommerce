@@ -14,7 +14,7 @@
                         @Html.NopLabelFor(model => model.MerchantId)
                     </div>
                     <div class="col-md-9">
-                        @Html.EditorFor(model => model.MerchantId)
+                        @Html.NopEditorFor(model => model.MerchantId)
                         @Html.ValidationMessageFor(model => model.MerchantId)
                     </div>
                 </div>
@@ -25,7 +25,7 @@
                         @Html.NopLabelFor(model => model.UserId)
                     </div>
                     <div class="col-md-9">
-                        @Html.EditorFor(model => model.UserId)
+                        @Html.NopEditorFor(model => model.UserId)
                         @Html.ValidationMessageFor(model => model.UserId)
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                         @Html.NopLabelFor(model => model.TestAddress.CountryId)
                     </div>
                     <div class="col-md-9">
-                        @Html.DropDownListFor(model => model.TestAddress.CountryId, Model.TestAddress.AvailableCountries)
+                        @Html.NopDropDownList("CountryId", Model.TestAddress.AvailableCountries)
                         @Html.ValidationMessageFor(model => model.TestAddress.CountryId)
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                         @Html.NopLabelFor(model => model.TestAddress.RegionId)
                     </div>
                     <div class="col-md-9">
-                        @Html.DropDownListFor(model => model.TestAddress.RegionId, Model.TestAddress.AvailableStates)
+                        @Html.NopDropDownList("RegionId", Model.TestAddress.AvailableStates)
                         @Html.ValidationMessageFor(model => model.TestAddress.RegionId)
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                         @Html.NopLabelFor(model => model.TestAddress.City)
                     </div>
                     <div class="col-md-9">
-                        @Html.EditorFor(model => model.TestAddress.City)
+                        @Html.NopEditorFor(model => model.TestAddress.City)
                         @Html.ValidationMessageFor(model => model.TestAddress.City)
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                         @Html.NopLabelFor(model => model.TestAddress.ZipPostalCode)
                     </div>
                     <div class="col-md-9">
-                        @Html.EditorFor(model => model.TestAddress.ZipPostalCode)
+                        @Html.NopEditorFor(model => model.TestAddress.ZipPostalCode)
                         @Html.ValidationMessageFor(model => model.TestAddress.ZipPostalCode)
                     </div>
                 </div>
@@ -89,7 +89,7 @@
                         @Html.NopLabelFor(model => model.TestAddress.Address)
                     </div>
                     <div class="col-md-9">
-                        @Html.EditorFor(model => model.TestAddress.Address)
+                        @Html.NopEditorFor(model => model.TestAddress.Address)
                         @Html.ValidationMessageFor(model => model.TestAddress.Address)
                     </div>
                 </div>
@@ -110,7 +110,7 @@
 
     <script type="text/javascript">
         function load_states(countryId) {
-            var regions = $("#@Html.FieldIdFor(model => model.TestAddress.RegionId)");
+            var regions = $("#RegionId");
 
             $.get("@(Url.Action("GetStatesByCountryId"))",
                     { "countryId": countryId },
@@ -125,13 +125,13 @@
         }
 
         $(document)
-            .ready(function() {
-                $("#@Html.FieldIdFor(model => model.TestAddress.CountryId)")
+            .ready(function () {
+                $("#CountryId")
                     .change(function() {
                         var selectedItem = $(this).val();
                         load_states(selectedItem);
                     });
-                load_states($("#@Html.FieldIdFor(model => model.TestAddress.CountryId)").val());
+                load_states($("#CountryId").val());
             });
     </script>
 }
