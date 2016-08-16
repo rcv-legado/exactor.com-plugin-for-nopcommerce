@@ -6,4 +6,4 @@ SupportedVersions: 3.80
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.Tax.Exactor.dll
-Description: This plugin allows you to calculate shipping taxes via Exactor
+Description: This plugin allows you to calculate taxes via Exactor
